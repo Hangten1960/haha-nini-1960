@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f1d3d">
+<title>HANG TEN – HAHA &amp; NINI · Winter Wonderland Adventure</title>
+<!--STYLE-->
+</head>
+<body>
+<div id="stage">
+<canvas id="game" aria-label="Game view"></canvas>
+
+<div id="ui">
+  <!-- LOADING -->
+  <section id="loading" class="screen show center">
+    <div class="loader"><div class="loader-star">❄</div><p>Travelling to the winter island…</p><div class="bar"><i id="loadBar"></i></div></div>
+  </section>
+
+  <!-- A. MAIN MENU -->
+  <section id="menu" class="screen side">
+    <div class="brand">
+      <img class="wordmark" data-brand="wordmarkNavy" alt="HANG TEN">
+      <h1 class="logo"><span>HAHA</span><em>&amp;</em><span>NINI</span></h1>
+      <p class="subtitle">WINTER WONDERLAND ADVENTURE</p>
+    </div>
+    <nav class="stack">
+      <button class="btn primary big" id="btnPlay">PLAY</button>
+      <button class="btn" id="btnLevels">LEVELS</button>
+      <button class="btn" id="btnChars">CHARACTERS</button>
+      <button class="btn" id="btnSettings">SETTINGS</button>
+      <button class="btn gold" id="btnMyReward" hidden>🎁 MY REWARD</button>
+    </nav>
+    <p class="menu-foot" id="menuFoot">Winter Wonderland</p>
+  </section>
+
+  <!-- C. CHARACTER SELECTION -->
+  <section id="select" class="screen center dim">
+    <div class="panel wide">
+      <h2>Choose your bear</h2>
+      <p class="muted">You can switch between them anytime while playing.</p>
+      <div class="cards" id="cards"></div>
+      <div class="row"><button class="btn" id="btnSelectBack">BACK</button><button class="btn primary" id="btnSelectPlay">PLAY</button></div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="settings" class="screen center dim">
+    <div class="panel">
+      <h2>Settings</h2>
+      <div class="setting"><span>Music</span><button class="toggle" id="setMusic" role="switch"></button></div>
+      <div class="setting"><span>Sound effects</span><button class="toggle" id="setSfx" role="switch"></button></div>
+      <div class="setting"><span>Winter outfit (jacket + scarf)</span><button class="toggle" id="setOutfit" role="switch"></button></div>
+      <div class="setting"><span>Graphics</span><div class="seg" id="setQuality"><button data-v="auto">Auto</button><button data-v="high">High</button><button data-v="low">Low</button></div></div>
+      <div class="setting"><span>Touch buttons</span><div class="seg" id="setTouch"><button data-v="auto">Auto</button><button data-v="on">On</button><button data-v="off">Off</button></div></div>
+      <div class="row"><button class="btn ghost" id="btnReset">RESET PROGRESS</button><button class="btn primary" id="btnSettingsClose">DONE</button></div>
+    </div>
+  </section>
+
+  <!-- WORLD MAP (next level) -->
+  <section id="worlds" class="screen center dim">
+    <div class="panel wide">
+      <p class="kicker">Winter Wonderland</p>
+      <h2>Choose a level</h2>
+      <div class="worlds" id="worldList"></div>
+      <p class="muted" id="worldsNote"></p>
+      <div class="row"><button class="btn" id="btnWorldsBack">BACK</button></div>
+    </div>
+  </section>
+
+  <!-- STORY CAPTION (intro) -->
+  <section id="story" class="screen"><p id="storyText"></p><button class="skip" id="btnSkip">Skip ▸</button></section>
+
+  <!-- B. GAMEPLAY HUD -->
+  <section id="hud" class="screen">
+    <div class="hud-top">
+      <div class="pill stars"><em class="lvl" id="hudLevel">L1</em><b class="ico">★</b><span id="hudStars">0</span><small id="hudTotal">/0</small><i class="magic" id="hudMagic" title="Hidden magic star">✦</i><span class="fp" title="HANG TEN footprints"><img data-brand="footprintNavy" alt=""><span id="hudFp">0</span><small id="hudFpTotal">/0</small></span></div>
+      <div class="progress" aria-label="Level progress"><div class="track"><i id="hudFill"></i></div><img id="hudMarker" alt=""><span class="goal">⌂</span></div>
+      <button class="round" id="btnPause" aria-label="Pause">❚❚</button>
+    </div>
+    <div class="rush" id="rush"><b>⏱</b><span id="rushTime">0.0</span><small id="rushCount">0/0</small></div>
+    <div class="hint" id="hint"></div>
+    <div class="toast" id="toast"></div>
+    <div class="touch" id="touch">
+      <button class="pad left" id="tLeft" aria-label="Move left">◀</button>
+      <button class="pad right" id="tRight" aria-label="Move right">▶</button>
+      <button class="pad switch" id="tSwitch" aria-label="Switch character"><img id="switchImg" alt=""><b>⇄</b></button>
+      <button class="pad jump" id="tJump" aria-label="Jump">JUMP</button>
+    </div>
+    <p class="keys" id="keys">← → move · Space jump (hold to float) · S switch · P pause</p>
+  </section>
+
+  <!-- PAUSE -->
+  <section id="pause" class="screen center dim">
+    <div class="panel">
+      <h2>Paused</h2>
+      <nav class="stack">
+        <button class="btn primary" id="btnResume">RESUME</button>
+        <button class="btn" id="btnRestart">RESTART LEVEL</button>
+        <button class="btn" id="btnPauseSettings">SETTINGS</button>
+        <button class="btn ghost" id="btnQuit">MAIN MENU</button>
+      </nav>
+    </div>
+  </section>
+
+  <!-- D. LEVEL COMPLETE -->
+  <section id="complete" class="screen side">
+    <div class="panel result">
+      <p class="kicker" id="resKicker">Level complete</p>
+      <h2 id="resTitle">Cleared!</h2>
+      <div class="rating" id="rating"><b>★</b><b>★</b><b>★</b></div>
+      <dl class="stats">
+        <div><dt>Stars</dt><dd id="resStars">0</dd></div>
+        <div><dt>Hidden magic star</dt><dd id="resMagic">—</dd></div>
+        <div><dt>HANG TEN footprints</dt><dd id="resFp">0</dd></div>
+        <div id="resRushRow"><dt>Star Rush</dt><dd id="resRush">0 / 0</dd></div>
+        <div><dt>Time</dt><dd id="resTime">0:00</dd></div>
+        <div class="total"><dt>Score</dt><dd id="resScore">0</dd></div>
+      </dl>
+      <p class="best" id="resBest"></p>
+      <div class="row"><button class="btn" id="btnReplay">REPLAY</button><button class="btn primary" id="btnNext">NEXT LEVEL</button></div>
+      <button class="link" id="btnCompleteMenu">Main menu</button>
+      <img class="signature" data-brand="wordmarkNavy" alt="HANG TEN">
+    </div>
+  </section>
+
+  <!-- E. FINAL REWARD (only after Level 4) -->
+  <section id="reward" class="screen center">
+    <div class="aurora"></div><div class="snowfx" id="snowfx"></div>
+    <div class="reward">
+      <div class="rw-left">
+      <div class="rw-head">
+        <img class="rw-bear" id="rwHaha" alt="HAHA BEAR">
+        <div>
+          <p class="rw-title">CONGRATULATIONS!</p>
+          <p class="rw-sub">WINTER ADVENTURE COMPLETE</p>
+        </div>
+        <img class="rw-bear" id="rwNini" alt="NINI BEAR">
+      </div>
+      <p class="rw-zh">恭喜你成功闖關！</p>
+      <p class="rw-body">感謝你幫助哈哈熊與妮妮熊找回冬日魔法星星，讓整座寒帶島嶼重新閃耀！</p>
+      <p class="rw-totals" id="rwTotals"></p>
+      </div>
+      <div class="rw-right">
+      <div class="ticket">
+        <div class="tk-left"><img data-brand="footprintWhite" alt=""></div>
+        <div class="tk-main">
+          <p class="tk-label">Your Reward:</p>
+          <p class="tk-amount">HANG TEN NT$300</p>
+          <p class="tk-name">購物抵用券</p>
+        </div>
+      </div>
+      <a class="btn primary big claim" id="btnClaim" target="_blank" rel="noopener"><span>立即領取優惠券</span><small>CLAIM YOUR REWARD</small></a>
+      <p class="claim-note" id="claimNote"></p>
+      <div class="row"><button class="btn" id="btnRewardReplay">PLAY AGAIN</button><button class="btn" id="btnRewardMenu">MAIN MENU</button></div>
+      <img class="signature light" data-brand="wordmarkWhite" alt="HANG TEN">
+      </div>
+    </div>
+  </section>
+
+  <section id="rotate" class="screen center"><div class="panel"><div class="rot">⟳</div><h2>Please rotate your device</h2><p class="muted">This adventure is played in landscape.</p></div></section>
+</div>
+</div><!-- /stage -->
+<!--SCRIPT-->
+</body>
+</html>

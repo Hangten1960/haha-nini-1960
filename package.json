@@ -1,0 +1,13 @@
+{
+  "name": "haha-nini-winter-wonderland-adventure",
+  "version": "3.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --serve",
+    "test": "node tests/sim.test.mjs"
+  },
+  "dependencies": { "three": "^0.170.0" },
+  "devDependencies": { "esbuild": "^0.24.0", "@fontsource-variable/fredoka": "^5.1.0" }
+}
